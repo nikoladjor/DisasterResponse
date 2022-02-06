@@ -1,6 +1,6 @@
 click==8.0.3
-cycler==0.11.0
-dataclasses==0.8
+cycler~=0.11.0
+dataclasses
 Flask==2.0.2
 gunicorn==20.1.0
 importlib-metadata==4.8.3
