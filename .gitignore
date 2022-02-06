@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Env in Udacity workspace
+disaster_response_env/
+
+
