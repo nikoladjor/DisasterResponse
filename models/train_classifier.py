@@ -20,15 +20,14 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import classification_report
 
-import pickle
-from datetime import datetime
+import time
 from joblib import dump, load
+
 
 nltk.download('omw-1.4')
 nltk.download('wordnet')
 nltk.download('punkt')
 nltk.download('stopwords')
-
 
 
 def load_data(database_filepath):
@@ -125,9 +124,11 @@ def main():
         print('Building model...')
         model = build_model()
         
+        start_time = time.time()
         print('Training model...')
         model.fit(X_train, Y_train)
-        
+        end_time = time.time()
+
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
@@ -135,6 +136,8 @@ def main():
         save_model(model, model_filepath)
 
         print('Trained model saved!')
+
+        print(f'Total training time: {end_time - start_time}')
 
     else:
         print('Please provide the filepath of the disaster messages database '\
