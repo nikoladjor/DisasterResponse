@@ -71,8 +71,8 @@ def tokenize(text):
 
 def build_model():
     model = Pipeline([
-        ('vect', TfidfVectorizer(tokenizer=tokenize, ngram_range=(1,2), max_features=2000)),
-        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=100, n_jobs=-1)))
+        ('vect', TfidfVectorizer(tokenizer=tokenize, ngram_range=(1,2), max_features=400)),
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=10, n_jobs=-1)))
     ])
 
     return model
@@ -94,14 +94,20 @@ def evaluate_model(model, X_test, y_test, category_names):
     num_class = y_test.shape[1]
     y_pred = model.predict(X_test)
     _report_lines = []
+    print("Model evaluation:\n")
+    print("Category:\t<Accuracy>\t<Precision>\t<Recall>\t<F1_score>\n")
     for _i in range(num_class):
         _lbl = category_names[_i]
         _clf_rep = classification_report(y_true=y_test[:,_i],y_pred=y_pred[:,_i],labels=[0],target_names=[_lbl])
         _last_line = _clf_rep.strip().split('\n')[-1]
         _precision, _recall, _f1, _support = [np.float32(xx) for xx in re.findall(r'[\d+\.\d+]+', _last_line)]
         _report_lines.append([_lbl, _precision, _recall, _f1, _support])
+        print(f"{_lbl}: {_precision}, {_recall}, {_f1}")
+        
+    acc_model = (y_test == y_pred).mean()
+    print(f"Overall model accuracy: {100*acc_model}%")
     
-    print(_report_lines)
+#     print(_report_lines)
     # return _report_lines
 
 
