@@ -131,4 +131,6 @@ dmypy.json
 # Env in Udacity workspace
 disaster_response_env/
 
-
+# models
+models/*.pkl
+models/*.joblib
