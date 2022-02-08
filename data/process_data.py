@@ -61,7 +61,7 @@ def load_data(messages_filepath, categories_filepath) -> pd.DataFrame:
 def clean_data(df) -> pd.DataFrame:
     # drop duplicates
     df = df.drop_duplicates(subset=['message'])
-    assert(max(df['id'].value_counts) == 1)
+    assert(max(df['id'].value_counts() == 1))
     return df
 
 
