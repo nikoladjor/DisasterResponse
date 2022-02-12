@@ -1,8 +1,8 @@
 cffi==1.15.0
 click==8.0.3
 cryptography==36.0.1
-cycler==0.11.0
-dataclasses==0.8
+cycler~=0.11.0
+dataclasses
 Flask==2.0.2
 greenlet==1.1.2
 gunicorn==20.1.0
