@@ -134,3 +134,7 @@ disaster_response_env/
 # models
 models/*.pkl
 models/*.joblib
+
+# Special local folders
+_research/
+.vscode
