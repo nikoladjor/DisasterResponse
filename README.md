@@ -32,7 +32,7 @@ The output of this script are two files - the trained model and the classificati
 
 The final model is trained using the `GridSearchCV` with 5 cross-validation splits (default).
 
->**NOTE**: Model needs to be trained in order for the app to work! Settings in the `train_classifier.py` will require longer time to train the model, so if only slight modifications in the web-app is needed, one should train the model with smaller number of leaves and <50 estimators, to get the feealing of what the app is doing.
+>**NOTE**: The web app **will not work** until the model is not trained! Default settings for `GridSearchCV` in the `train_classifier.py` will require longer time to train the model. Thus, if only slight modifications to the web-app are needed or one wants to try the web-app out, one should train the model with fewer (<50) estimators, to get the feeling of how is the app working.
 
 ## Usage
 ### Instructions:
@@ -54,6 +54,10 @@ The final model is trained using the `GridSearchCV` with 5 cross-validation spli
 If the app is used only on a local server, no additional settings are needed. However, on deployment to a cloud storage, additional settings are required based on 
 
 ## Examples
+
+**Home Page**:
+Home page with information about the trained model used for input message classification.
+![Home Page](/docs/udacity_screenshot_model_info.png)
 
 Below, you can find three examples with different messages entered after following the instructions above and server started.
 
