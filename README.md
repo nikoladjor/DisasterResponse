@@ -3,6 +3,8 @@
 ## About
 Web Application using machine learning pipeline to categorize emergency messages based on the needs communicated by the sender.
 
+The source code does not include the trained model, therefore please follow the steps written in the instructions section of this README to generate the trained model required and use the app.
+
 
 ## ETL Pipeline
 The ETL pipeline to prepare data for model training is started as described below.
@@ -27,6 +29,10 @@ Best overall results were achieved by training `Pipeline` model with two steps:
 The code for training the model is located in [models/train_classifier.py](/models/train_classifier.py).
 
 The output of this script are two files - the trained model and the classification report which is used to show some date about the trained model on the home page of the web-app.
+
+The final model is trained using the `GridSearchCV` with 5 cross-validation splits (default).
+
+>**NOTE**: Model needs to be trained in order for the app to work! Settings in the `train_classifier.py` will require longer time to train the model, so if only slight modifications in the web-app is needed, one should train the model with smaller number of leaves and <50 estimators, to get the feealing of what the app is doing.
 
 ## Usage
 ### Instructions:
