@@ -59,6 +59,14 @@ def load_data(messages_filepath, categories_filepath) -> pd.DataFrame:
 
 
 def clean_data(df) -> pd.DataFrame:
+    """Clean up the data frame
+
+    Args:
+        df (pd.DataFrame): Input data frame.
+
+    Returns:
+        pd.DataFrame: Dat frame with duplicated messages removed.
+    """
     # drop duplicates
     df = df.drop_duplicates(subset=['message'])
     assert(max(df['id'].value_counts() == 1))
@@ -66,6 +74,14 @@ def clean_data(df) -> pd.DataFrame:
 
 
 def save_data(df, database_filename) -> None:
+    """Save data frame to a database.
+
+    Args:
+        df (pd.DataFrame): Data frame to be saved.
+        database_filename (str): Path to database to be saved.
+    
+    Returns: None
+    """
     engine = create_engine(f'sqlite:///{database_filename}')
     df.to_sql(database_filename.split('.db')[0], engine, index=False)
 
