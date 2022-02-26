@@ -44,7 +44,8 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_counts = genre_counts.reset_index()
 
-    fig1 = px.bar(data_frame=genre_counts, x='genre', y='message')
+    fig1 = px.bar(data_frame=genre_counts, x='genre', y='message', 
+                  labels={'message': "Counts", 'genre': "Genre"})
 
     fig_precision = px.bar(data_frame=report_df, x='category', y='precision', color='precision', 
                   labels={'category': "Category", 'precision': "Precision"} )
@@ -63,7 +64,7 @@ def index():
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
     
     # render web page with plotly graphs
-    return render_template('master.html', ids=ids, graphJSON=graphJSON, accuracy=report[-1][1])
+    return render_template('master.html', ids=ids, graphJSON=graphJSON, accuracy=report[-1][1], model_params=model.best_params_)
 
 # web page that handles user query and displays model results
 @app.route('/go')

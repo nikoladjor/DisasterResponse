@@ -56,19 +56,47 @@
 <div class="container">
     {% block content %}
         <div class="page-header">
-            <h1 class="text-center">Overview of Training Dataset</h1>
-            <h5>Overall Test Accuracy: {{accuracy}}%</h5>
+            <h1 class="text-center">Overview of Training Dataset and Model Used</h1>
+            
+
+            <h3 align="center" style="color: navy;">Training Model Parameters</h3>
+            <table border="1px solid black" align="center">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody whitespace="nowrap">
+                    {% for k,v in model_params.items() %}
+                    <tr>
+                        <td>{{k}}</td>
+                        <td>{{v}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th style="color: crimson;">Overall Test Accuracy</th>
+                        <td style="color: crimson;">{{accuracy}} %</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
         </div>
     {% endblock %}
 
-    {% for id in ids %}
+
+    <div class="page-header">
+        <h1 class="text-center">Visual Info about Training Dataset and Model Training</h1>
+        {% for id in ids %}
         <div class="card">
             <div class="card-body">
                 <div id="{{id}}"></div>
             </div>
         </div>
+        {% endfor %}
+    </div>
 
-    {% endfor %}
 </div>
 
 <script type="text/javascript">

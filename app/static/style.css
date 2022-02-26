@@ -18,3 +18,17 @@
     font-size: 20px;
     text-align: center;
   }
+
+  table {
+    padding: 20px 20px 20px;
+    margin-bottom: 20px;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+
+th,td {
+    padding: 5px 10px;
+    border-top-width: 0;
+    border-left-width: 0;
+}
