@@ -1,4 +1,6 @@
+from pathlib import Path
 import sys
+import joblib
 
 import numpy as np
 import pandas as pd
@@ -18,11 +20,19 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, make_scorer
 
 import time
 from joblib import dump, load
 
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 nltk.download('omw-1.4')
 nltk.download('wordnet')
@@ -67,14 +77,29 @@ def tokenize(text):
     _tokenized = list(itertools.chain.from_iterable(_tokenized))
     return _tokenized
 
+def acc_score(y, y_pred):
+    acc_tuned_model = (y_pred == y).mean()
+    return acc_tuned_model
 
 def build_model():
     model = Pipeline([
         ('vect', TfidfVectorizer(tokenizer=tokenize, ngram_range=(1,2), max_features=400)),
-        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=10, n_jobs=-1)))
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=10), n_jobs=-1))
     ])
 
-    return model
+    parameters = {
+        'vect__ngram_range': ((1, 1), (1, 2)),
+        'vect__max_features': [None, 1000, 2000, 4000],
+        'clf__estimator__n_estimators': [100, 200, 300],
+        'clf__estimator__min_samples_split': [4, 6, 8],
+        'clf__estimator__ccp_alpha': np.linspace(0, 0.05, 5)
+    }
+    
+    custom_scoring = make_scorer(acc_score)
+
+    model_cv = GridSearchCV(model, param_grid=parameters, verbose=4, scoring=custom_scoring)
+
+    return model_cv
 
 
 def evaluate_model(model, X_test, y_test, category_names):
@@ -105,10 +130,9 @@ def evaluate_model(model, X_test, y_test, category_names):
         
     acc_model = (y_test == y_pred).mean()
     print(f"Overall model accuracy: {100*acc_model}%")
-    
-#     print(_report_lines)
-    # return _report_lines
 
+    _report_lines.append(['overall_accuracy', 100*acc_model])
+    dump(_report_lines, Path('.') / 'production_model_report.joblib')
 
 def save_model(model, model_filepath):
     dump(model, model_filepath)
@@ -119,7 +143,7 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
         
         print('Building model...')
         model = build_model()
