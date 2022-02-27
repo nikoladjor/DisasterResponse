@@ -65,12 +65,19 @@ def clean_data(df) -> pd.DataFrame:
         df (pd.DataFrame): Input data frame.
 
     Returns:
-        pd.DataFrame: Dat frame with duplicated messages removed.
+        pd.DataFrame: Data frame with duplicated messages removed.
     """
     # drop duplicates
     df = df.drop_duplicates(subset=['message'])
-    assert(max(df['id'].value_counts() == 1))
-    return df
+
+    # Assert binary values in classification
+    mvals = df.iloc[:,4:]
+    
+    to_drop = (mvals > 1).any(axis=1)
+    df_clean = df.drop(to_drop[to_drop].index)
+
+    assert(max(df_clean['id'].value_counts() == 1))
+    return df_clean
 
 
 def save_data(df, database_filename) -> None:
@@ -83,7 +90,7 @@ def save_data(df, database_filename) -> None:
     Returns: None
     """
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql(database_filename.split('.db')[0], engine, index=False)
+    df.to_sql(database_filename.split('.db')[0], engine, index=False, if_exists='replace')
 
 
 def main():
