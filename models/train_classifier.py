@@ -40,7 +40,16 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 
-def load_data(database_filepath):
+def load_data(database_filepath: str):
+    """Load database into data frame and splits it into features and categories.
+
+    Args:
+        database_filepath (str): Filepath of the database.
+
+    Returns:
+        list: Feature matrix (X), categories (Y), category names
+    """
+
     # load data from database
     engine = create_engine(f'sqlite:///{database_filepath}')
     tbl_name = database_filepath.split('.db')[0]
@@ -77,11 +86,25 @@ def tokenize(text):
     _tokenized = list(itertools.chain.from_iterable(_tokenized))
     return _tokenized
 
-def acc_score(y, y_pred):
+def acc_score(y: np.ndarray, y_pred: np.ndarray) -> float:
+    """Overall accuracy score to be used in the training step.
+
+    Args:
+        y (np.ndarray): Test data.
+        y_pred (np.ndarray): Predicted data.
+
+    Returns:
+        float: Accuracy metrics
+    """
     acc_tuned_model = (y_pred == y).mean()
     return acc_tuned_model
 
 def build_model():
+    """Utility function to build the training model pipeline.
+
+    Returns:
+        GridSearchCV: Returns GridSearchCV estimator to be trained.
+    """
     model = Pipeline([
         ('vect', TfidfVectorizer(tokenizer=tokenize, ngram_range=(1,2), max_features=400)),
         ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=10), n_jobs=-1))
@@ -135,6 +158,12 @@ def evaluate_model(model, X_test, y_test, category_names):
     dump(_report_lines, Path('.') / 'production_model_report.joblib')
 
 def save_model(model, model_filepath):
+    """Saves the model using joblib.dump.
+
+    Args:
+        model (GridSearchCV or any estimator): Model to be saved.
+        model_filepath (str): File path to store the model to.
+    """
     dump(model, model_filepath)
 
 
