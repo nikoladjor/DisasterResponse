@@ -112,10 +112,10 @@ def build_model():
 
     parameters = {
         'vect__ngram_range': ((1, 1), (1, 2)),
-        'vect__max_features': [None, 1000, 2000, 4000],
+        'vect__max_features': [None, 2000, 4000],
         'clf__estimator__n_estimators': [100, 200, 300],
         'clf__estimator__min_samples_split': [4, 6, 8],
-        'clf__estimator__ccp_alpha': np.linspace(0, 0.05, 5)
+        'clf__estimator__ccp_alpha': np.linspace(0, 0.05, 3)
     }
     
     custom_scoring = make_scorer(acc_score)
